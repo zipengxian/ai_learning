@@ -1,0 +1,117 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  phone     String?
+  password  String
+  nickname  String
+  grade     String?   // 如 "grade1", "grade2", ... "grade12"
+  avatar    String?
+  subjects  String?   // JSON string, 偏好学科列表 如 '["math","english"]'
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  studyRecords  StudyRecord[]
+  wrongAnswers  WrongAnswer[]
+  chatHistories ChatHistory[]
+}
+
+model Subject {
+  id        Int    @id @default(autoincrement())
+  name      String @unique  // 语文/数学/英语/物理/化学/生物/历史/地理
+  icon      String?         // emoji图标
+  sortOrder Int    @default(0)
+
+  chapters Chapter[]
+}
+
+model Grade {
+  id    Int    @id @default(autoincrement())
+  name  String @unique  // 一年级~高三
+  level Int    @unique  // 1-12
+
+  chapters Chapter[]
+}
+
+model Chapter {
+  id          Int     @id @default(autoincrement())
+  subjectId   Int
+  gradeId     Int
+  title       String
+  description String?
+  sortOrder   Int     @default(0)
+
+  subject         Subject          @relation(fields: [subjectId], references: [id])
+  grade           Grade            @relation(fields: [gradeId], references: [id])
+  knowledgePoints KnowledgePoint[]
+}
+
+model KnowledgePoint {
+  id        Int     @id @default(autoincrement())
+  chapterId Int
+  title     String
+  content   String   // 知识点讲解内容（支持 Markdown）
+  videoUrl  String?  // 视频链接
+  sortOrder Int     @default(0)
+
+  chapter      Chapter       @relation(fields: [chapterId], references: [id])
+  questions    Question[]
+  studyRecords StudyRecord[]
+}
+
+model Question {
+  id               Int     @id @default(autoincrement())
+  knowledgePointId Int
+  type             String  // 'choice' | 'fill' | 'judge' | 'essay'
+  content          String  // 题目内容
+  options          String? // JSON string, 选择题选项 如 '["A.xx","B.xx","C.xx","D.xx"]'
+  answer           String  // 正确答案
+  explanation      String? // 解析
+  difficulty       Int     @default(1) // 1-简单 2-中等 3-困难
+
+  knowledgePoint KnowledgePoint @relation(fields: [knowledgePointId], references: [id])
+  wrongAnswers   WrongAnswer[]
+}
+
+model StudyRecord {
+  id               Int      @id @default(autoincrement())
+  userId           Int
+  knowledgePointId Int
+  status           String   @default("completed") // 'completed' | 'in_progress'
+  score            Int?     // 0-100
+  completedAt      DateTime @default(now())
+
+  user           User           @relation(fields: [userId], references: [id])
+  knowledgePoint KnowledgePoint @relation(fields: [knowledgePointId], references: [id])
+}
+
+model WrongAnswer {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  questionId    Int
+  userAnswer    String   // 用户的错误答案
+  correctAnswer String   // 正确答案
+  createdAt     DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id])
+  question Question @relation(fields: [questionId], references: [id])
+}
+
+model ChatHistory {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  sessionId String   // 会话ID
+  role      String   // 'user' | 'assistant'
+  content   String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}

@@ -1,0 +1,29 @@
+{
+  "name": "k12-platform",
+  "private": true,
+  "scripts": {
+    "dev:web": "pnpm --filter @k12/web dev",
+    "dev:desktop": "pnpm --filter @k12/desktop dev",
+    "dev:mobile": "pnpm --filter @k12/mobile start",
+    "dev:server": "pnpm --filter @k12/server dev",
+    "build:web": "pnpm --filter @k12/web build",
+    "build:desktop": "pnpm --filter @k12/desktop build",
+    "typecheck": "tsc --noEmit -p packages/web/tsconfig.json && tsc --noEmit -p packages/desktop/tsconfig.json && tsc --noEmit -p packages/mobile/tsconfig.json && tsc --noEmit -p packages/server/tsconfig.json",
+    "lint": "eslint packages/*/src --ext .ts,.tsx",
+    "format": "prettier --write \"packages/*/src/**/*.{ts,tsx,css}\"",
+    "ci:check": "bash scripts/ci-check.sh"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.34.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^3.2.0",
+    "typescript": "^5.4.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,18 @@
+/* 暗色主题 */
+[data-theme='dark'] {
+  --color-bg-primary: #1a1a2e;
+  --color-bg-secondary: #16213e;
+  --color-bg-tertiary: #0f3460;
+  --color-bg-sidebar: #141428;
+  --color-bg-ai-panel: #16162a;
+  --color-text-primary: #e4e4e7;
+  --color-text-secondary: #a1a1aa;
+  --color-text-tertiary: #71717a;
+  --color-border: #2d2d3f;
+  --color-accent: #818cf8;
+  --color-accent-hover: #6366f1;
+  --color-accent-light: rgba(129, 140, 248, 0.12);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+}
